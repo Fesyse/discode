@@ -1,0 +1,5 @@
+tmp
+private-key.pem
+public-key.pem
+.env
+go.sum

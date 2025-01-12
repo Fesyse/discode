@@ -10,7 +10,7 @@ import (
 	gmiddleware "github.com/pilinux/gorest/lib/middleware"
 	gservice "github.com/pilinux/gorest/service"
 
-	"github.com/pilinux/gorest/example/controller"
+	"discode/controller"
 )
 
 // SetupRouter sets up all the routes
@@ -128,11 +128,6 @@ func SetupRouter(configure *gconfig.Configuration) (*gin.Engine, error) {
 		r.Use(gmiddleware.RateLimit(limiterInstance))
 	}
 
-	// Render HTML
-	if gconfig.IsTemplatingEngine() {
-		r.Use(gmiddleware.Pongo2(configure.ViewConfig.Directory))
-	}
-
 	// API Status
 	r.GET("", controller.APIStatus)
 
@@ -239,29 +234,24 @@ func SetupRouter(configure *gconfig.Configuration) (*gin.Engine, error) {
 					configure.Security.TwoFA.Status.Verified,
 				))
 			}
-			rUsers.POST("", controller.CreateUser)      // Protected
-			rUsers.PUT("", controller.UpdateUser)       // Protected
-			rUsers.PUT("/hobbies", controller.AddHobby) // Protected
+			rUsers.POST("", controller.CreateUser) // Protected
+			rUsers.PUT("", controller.UpdateUser)  // Protected
 
-			// Post
-			rPosts := v1.Group("posts")
-			rPosts.GET("", controller.GetPosts)    // Non-protected
-			rPosts.GET("/:id", controller.GetPost) // Non-protected
-			rPosts.Use(gmiddleware.JWT()).Use(gservice.JWTBlacklistChecker())
-			if gconfig.Is2FA() {
-				rPosts.Use(gmiddleware.TwoFA(
-					configure.Security.TwoFA.Status.On,
-					configure.Security.TwoFA.Status.Off,
-					configure.Security.TwoFA.Status.Verified,
-				))
-			}
-			rPosts.POST("", controller.CreatePost)       // Protected
-			rPosts.PUT("/:id", controller.UpdatePost)    // Protected
-			rPosts.DELETE("/:id", controller.DeletePost) // Protected
-
-			// Hobby
-			rHobbies := v1.Group("hobbies")
-			rHobbies.GET("", controller.GetHobbies) // Non-protected
+			// // Post
+			// rPosts := v1.Group("posts")
+			// rPosts.GET("", controller.GetPosts)    // Non-protected
+			// rPosts.GET("/:id", controller.GetPost) // Non-protected
+			// rPosts.Use(gmiddleware.JWT()).Use(gservice.JWTBlacklistChecker())
+			// if gconfig.Is2FA() {
+			// 	rPosts.Use(gmiddleware.TwoFA(
+			// 		configure.Security.TwoFA.Status.On,
+			// 		configure.Security.TwoFA.Status.Off,
+			// 		configure.Security.TwoFA.Status.Verified,
+			// 	))
+			// }
+			// rPosts.POST("", controller.CreatePost)       // Protected
+			// rPosts.PUT("/:id", controller.UpdatePost)    // Protected
+			// rPosts.DELETE("/:id", controller.DeletePost) // Protected
 
 			// Test JWT
 			rTestJWT := v1.Group("test-jwt")
@@ -274,30 +264,6 @@ func SetupRouter(configure *gconfig.Configuration) (*gin.Engine, error) {
 				))
 			}
 			rTestJWT.GET("", controller.AccessResource) // Protected
-		}
-
-		// REDIS Playground
-		if gconfig.IsRedis() {
-			rPlayground := v1.Group("playground")
-			rPlayground.GET("/redis_read", controller.RedisRead)        // Non-protected
-			rPlayground.POST("/redis_create", controller.RedisCreate)   // Non-protected
-			rPlayground.DELETE("/redis_delete", controller.RedisDelete) // Non-protected
-
-			rPlayground.GET("/redis_read_hash", controller.RedisReadHash)        // Non-protected
-			rPlayground.POST("/redis_create_hash", controller.RedisCreateHash)   // Non-protected
-			rPlayground.DELETE("/redis_delete_hash", controller.RedisDeleteHash) // Non-protected
-		}
-
-		// Mongo Playground
-		if gconfig.IsMongo() {
-			rPlaygroundMongo := v1.Group("playground-mongo")
-			rPlaygroundMongo.POST("/mongo_create_one", controller.MongoCreateOne)                 // Non-protected
-			rPlaygroundMongo.GET("/mongo_get_all", controller.MongoGetAll)                        // Non-protected
-			rPlaygroundMongo.GET("/mongo_get_by_id/:id", controller.MongoGetByID)                 // Non-protected
-			rPlaygroundMongo.POST("/mongo_get_by_filter", controller.MongoGetByFilter)            // Non-protected
-			rPlaygroundMongo.PUT("/mongo_update_by_id", controller.MongoUpdateByID)               // Non-protected
-			rPlaygroundMongo.DELETE("/mongo_delete_field_by_id", controller.MongoDeleteFieldByID) // Non-protected
-			rPlaygroundMongo.DELETE("/mongo_delete_doc_by_id/:id", controller.MongoDeleteByID)    // Non-protected
 		}
 
 		// Basic Auth demo

@@ -11,8 +11,8 @@ import (
 
 	grenderer "github.com/pilinux/gorest/lib/renderer"
 
-	"github.com/pilinux/gorest/example/database/model"
-	"github.com/pilinux/gorest/example/handler"
+	"discode/database/model"
+	"discode/handler"
 )
 
 // GetUsers - GET /users
@@ -69,27 +69,6 @@ func UpdateUser(c *gin.Context) {
 	}
 
 	resp, statusCode := handler.UpdateUser(userIDAuth, user)
-
-	if reflect.TypeOf(resp.Message).Kind() == reflect.String {
-		grenderer.Render(c, resp, statusCode)
-		return
-	}
-
-	grenderer.Render(c, resp.Message, statusCode)
-}
-
-// AddHobby - PUT /users/hobbies
-func AddHobby(c *gin.Context) {
-	userIDAuth := c.GetUint64("authID")
-	hobby := model.Hobby{}
-
-	// bind JSON
-	if err := c.ShouldBindJSON(&hobby); err != nil {
-		grenderer.Render(c, gin.H{"message": err.Error()}, http.StatusBadRequest)
-		return
-	}
-
-	resp, statusCode := handler.AddHobby(userIDAuth, hobby)
 
 	if reflect.TypeOf(resp.Message).Kind() == reflect.String {
 		grenderer.Render(c, resp, statusCode)

@@ -8,7 +8,7 @@ import (
 	gdatabase "github.com/pilinux/gorest/database"
 	gmodel "github.com/pilinux/gorest/database/model"
 
-	"github.com/pilinux/gorest/example/database/model"
+	"discode/database/model"
 )
 
 // Load all the models
@@ -17,18 +17,12 @@ type twoFA gmodel.TwoFA
 type twoFABackup gmodel.TwoFABackup
 type tempEmail gmodel.TempEmail
 type user model.User
-type post model.Post
-type hobby model.Hobby
-type userHobby model.UserHobby
 
 // DropAllTables - careful! It will drop all the tables!
 func DropAllTables() error {
 	db := gdatabase.GetDB()
 
 	if err := db.Migrator().DropTable(
-		&userHobby{},
-		&hobby{},
-		&post{},
 		&user{},
 		&tempEmail{},
 		&twoFABackup{},
@@ -59,8 +53,6 @@ func StartMigration(configure gconfig.Configuration) error {
 			&twoFABackup{},
 			&tempEmail{},
 			&user{},
-			&post{},
-			&hobby{},
 		); err != nil {
 			return err
 		}
@@ -75,8 +67,6 @@ func StartMigration(configure gconfig.Configuration) error {
 		&twoFABackup{},
 		&tempEmail{},
 		&user{},
-		&post{},
-		&hobby{},
 	); err != nil {
 		return err
 	}

@@ -8,8 +8,8 @@ import (
 	gdatabase "github.com/pilinux/gorest/database"
 	"github.com/qiniu/qmgo/options"
 
-	"github.com/pilinux/gorest/example/database/migrate"
-	"github.com/pilinux/gorest/example/router"
+	"discode/database/migrate"
+	"discode/router"
 )
 
 func main() {
