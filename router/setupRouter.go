@@ -237,22 +237,6 @@ func SetupRouter(configure *gconfig.Configuration) (*gin.Engine, error) {
 			rUsers.POST("", controller.CreateUser) // Protected
 			rUsers.PUT("", controller.UpdateUser)  // Protected
 
-			// // Post
-			// rPosts := v1.Group("posts")
-			// rPosts.GET("", controller.GetPosts)    // Non-protected
-			// rPosts.GET("/:id", controller.GetPost) // Non-protected
-			// rPosts.Use(gmiddleware.JWT()).Use(gservice.JWTBlacklistChecker())
-			// if gconfig.Is2FA() {
-			// 	rPosts.Use(gmiddleware.TwoFA(
-			// 		configure.Security.TwoFA.Status.On,
-			// 		configure.Security.TwoFA.Status.Off,
-			// 		configure.Security.TwoFA.Status.Verified,
-			// 	))
-			// }
-			// rPosts.POST("", controller.CreatePost)       // Protected
-			// rPosts.PUT("/:id", controller.UpdatePost)    // Protected
-			// rPosts.DELETE("/:id", controller.DeletePost) // Protected
-
 			// Test JWT
 			rTestJWT := v1.Group("test-jwt")
 			rTestJWT.Use(gmiddleware.JWT()).Use(gservice.JWTBlacklistChecker())
